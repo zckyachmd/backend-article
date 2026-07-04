@@ -1,0 +1,151 @@
+{
+  "info": {
+    "name": "Article API",
+    "description": "Collection untuk microservice Article API. Endpoint mencakup create, list, detail, update, partial update, dan soft delete article. Soft delete mengubah status menjadi thrash, bukan menghapus row secara fisik.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080", "type": "string" },
+    { "key": "article_id", "value": "1", "type": "string" },
+    { "key": "limit", "value": "10", "type": "string" },
+    { "key": "offset", "value": "0", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Create Article",
+      "request": {
+        "method": "POST",
+        "description": "Membuat article baru. Semua field wajib diisi. Title minimal 20 karakter, content minimal 200 karakter, category minimal 3 karakter, status harus publish/draft/thrash.",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/article",
+          "host": ["{{base_url}}"],
+          "path": ["article"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"This is an article title with enough length\",\n  \"content\": \"This article content is intentionally made very long so it passes the minimum two hundred character validation rule. This article content is intentionally made very long so it passes the minimum two hundred character validation rule.\",\n  \"category\": \"Technology\",\n  \"status\": \"publish\"\n}"
+        }
+      },
+      "response": [
+        {
+          "name": "201 Created",
+          "originalRequest": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{base_url}}/article" }
+          },
+          "status": "Created",
+          "code": 201,
+          "body": "{\n  \"id\": 1,\n  \"title\": \"This is an article title with enough length\",\n  \"content\": \"This article content is intentionally made very long so it passes the minimum two hundred character validation rule. This article content is intentionally made very long so it passes the minimum two hundred character validation rule.\",\n  \"category\": \"Technology\",\n  \"status\": \"publish\",\n  \"created_date\": \"2026-07-04T01:00:00Z\",\n  \"updated_date\": \"2026-07-04T01:00:00Z\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "List Articles",
+      "request": {
+        "method": "GET",
+        "description": "Mengambil seluruh article dengan paging berbasis path parameter limit dan offset. Contoh default: 10 data mulai dari offset 0.",
+        "url": {
+          "raw": "{{base_url}}/article/{{limit}}/{{offset}}",
+          "host": ["{{base_url}}"],
+          "path": ["article", "{{limit}}", "{{offset}}"]
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/article/{{limit}}/{{offset}}" }
+          },
+          "status": "OK",
+          "code": 200,
+          "body": "[\n  {\n    \"id\": 1,\n    \"title\": \"This is an article title with enough length\",\n    \"content\": \"This article content is intentionally made very long so it passes the minimum two hundred character validation rule. This article content is intentionally made very long so it passes the minimum two hundred character validation rule.\",\n    \"category\": \"Technology\",\n    \"status\": \"publish\",\n    \"created_date\": \"2026-07-04T01:00:00Z\",\n    \"updated_date\": \"2026-07-04T01:00:00Z\"\n  }\n]"
+        }
+      ]
+    },
+    {
+      "name": "Get Article Detail",
+      "request": {
+        "method": "GET",
+        "description": "Mengambil detail article berdasarkan ID article.",
+        "url": {
+          "raw": "{{base_url}}/article/{{article_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["article", "{{article_id}}"]
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/article/{{article_id}}" }
+          },
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"id\": 1,\n  \"title\": \"This is an article title with enough length\",\n  \"content\": \"This article content is intentionally made very long so it passes the minimum two hundred character validation rule. This article content is intentionally made very long so it passes the minimum two hundred character validation rule.\",\n  \"category\": \"Technology\",\n  \"status\": \"publish\",\n  \"created_date\": \"2026-07-04T01:00:00Z\",\n  \"updated_date\": \"2026-07-04T01:00:00Z\"\n}"
+        }
+      ]
+    },
+    {
+      "name": "Put Article",
+      "request": {
+        "method": "PUT",
+        "description": "Mengganti seluruh data article berdasarkan ID. Semua field wajib dikirim ulang seperti create.",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/article/{{article_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["article", "{{article_id}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"This is updated article title text\",\n  \"content\": \"This updated article content is intentionally made very long so it passes the minimum two hundred character validation rule. This updated article content is intentionally made very long so it passes the minimum two hundred character validation rule.\",\n  \"category\": \"Business\",\n  \"status\": \"draft\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Patch Article",
+      "request": {
+        "method": "PATCH",
+        "description": "Mengubah sebagian field article berdasarkan ID. Body tidak boleh kosong. Field yang dikirim tetap harus valid. Contoh di bawah mengubah title dengan nilai valid.",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": {
+          "raw": "{{base_url}}/article/{{article_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["article", "{{article_id}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"This patch title is valid\"\n}"
+        }
+      }
+    },
+    {
+      "name": "Delete Article",
+      "request": {
+        "method": "DELETE",
+        "description": "Soft delete article berdasarkan ID. Endpoint ini tidak menghapus row dari tabel posts, tetapi mengubah status menjadi thrash.",
+        "url": {
+          "raw": "{{base_url}}/article/{{article_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["article", "{{article_id}}"]
+        }
+      },
+      "response": [
+        {
+          "name": "200 OK",
+          "originalRequest": {
+            "method": "DELETE",
+            "url": { "raw": "{{base_url}}/article/{{article_id}}" }
+          },
+          "status": "OK",
+          "code": 200,
+          "body": "{\n  \"message\": \"article deleted\"\n}"
+        }
+      ]
+    }
+  ]
+}
